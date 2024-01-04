@@ -1,2 +1,2 @@
-# mslearn-ai-document-intelligence.ja-jp
-Japanese repo
+# mslearn-document-intelligence
+Azure AI Document Intelligence モジュールのラボ ファイル
