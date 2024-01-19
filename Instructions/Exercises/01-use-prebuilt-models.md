@@ -1,7 +1,7 @@
 ---
 lab:
   title: 事前構築済みの Document Intelligence モデルを使う
-  module: Module 11 - Reading Text in Images and Documents
+  module: Module 6 - Document Intelligence
 ---
 
 # 事前構築済みの Document Intelligence モデルを使う
@@ -13,14 +13,14 @@ lab:
 Azure AI Document Intelligence サービスを呼び出すには、そのサービスを Azure でホストするためのリソースを先に作成する必要があります。
 
 1. ブラウザー タブで Azure portal ([https://portal.azure.com](https://portal.azure.com?azure-portal=true)) を開き、自分の Azure サブスクリプションに関連付けられている Microsoft アカウントを使用してサインインします。
-1. Azure portal のホーム ページで、上部の検索ボックスにに移動して、「**Document Intelligence**」と入力し、**Enter** キーを押します。
+1. Azure portal のホーム ページで、上部の検索ボックスに「**Document Intelligence**」と入力し、**Enter** キーを押します。
 1. **[Document Intelligence]** ページで、**[作成]** を選択します。
-1. **[Document Intelligence の作成]** ページで、次を使用してリソースを構成します。
+1. **[Document Intelligence の作成]** ページで、次のコマンドを使用してリソースを構成します。
     - **サブスクリプション**: Azure サブスクリプション。
-    - **リソース グループ**: *DocIntelligenceResources* などの一意の名前を持つリソース グループを選択または作成します。
+    - **リソース グループ**: *DocIntelligenceResources* などの 一意の名前を持つリソース グループを選択または作成します。
     - **リージョン**: 最寄りのリージョンを選択します。
     - **名前**: グローバルに一意の名前を入力します。
-    - **価格レベル**: **Free F0** を選択します (Free レベルを利用できない場合は、**Standard S0** を選択します)。
+    - **価格レベル**: Free F0** を選択**します (Free レベルを利用できない場合は、**Standard S0** を選択します)。
 1. 次に **[確認および作成]**、**[作成]** の順に選択します。 Azure が Azure AI Document Intelligence リソースを作成するまで待ちます。
 1. デプロイが完了したら、**[リソースに移動]** を選択します。 この演習の残りの部分のため、このページを開いたままにします。
 
@@ -47,7 +47,7 @@ Azure AI Document Intelligence サービスを呼び出すには、そのサー�
 
 次に、Azure Document Intelligence Service SDK を使用するアプリを調べてみましょう。 Visual Studio Code を使用してアプリを開発します。 アプリのコード ファイルは、GitHub リポジトリで提供されています。
 
-> **ヒント**: **mslearn-ai-document-intelligence** リポジトリを既に複製している場合は、Visual Studio Code で開きます。 それ以外の場合は、次の手順に従って開発環境に複製します。
+> **ヒント**: mslearn-ai-document-intelligence** リポジトリを**既に複製している場合は、Visual Studio Code で開きます。 それ以外の場合は、次の手順に従って開発環境に複製します。
 
 1. Visual Studio Code を起動します。
 1. パレットを開き (SHIFT+CTRL+P)、**Git:Clone** コマンドを実行して、`https://github.com/MicrosoftLearning/mslearn-ai-document-intelligence` リポジトリをローカル フォルダーに複製します (どのフォルダーでも問題ありません)。
