@@ -32,14 +32,15 @@ Azure AI Document Intelligence サービスを呼び出すには、そのサー�
 1. **[ドキュメントの分析]** で **[読み取り]** タイルを選びます。
 1. アカウントへのサインインを求められた場合は、Azure 資格情報を使用します。
 1. 使用する Azure AI Document Intelligence リソースを確認するメッセージが表示されたら、Azure AI Document Intelligence リソースの作成時に使用したサブスクリプションとリソース名を選択します。
-1. 左側のドキュメントの一覧で、**read-german.png** を選びます。
+1. 左側のドキュメントの一覧で、**read-german.pdf** を選択します。
 
     ![Azure AI Document Intelligence Studio の [読み取り] ページを示すスクリーンショット。](../media/read-german-sample.png#lightbox)
 
+1. 左上で **[分析オプション]** を選択したら、**[分析オプション]** ウィンドウの **[言語]** チェックボックス (**[オプション検出]** の下) をオンにし、**[保存]** をクリックします。 
 1. 左上の **[分析の実行]** を選びます。
 1. 分析が完了すると、画像から抽出されたテキストが右側の **[コンテンツ]** タブに表示されます。このテキストを確認し、元の画像のテキストと比較して正確さを調べます。
 1. **[結果]** タブを選びます。このタブには、抽出された JSON コードが表示されます。 
-1. **[結果]** タブで JSON コードの一番下までスクロールします。読み取りモデルによって各スパンの言語が検出されていることに注意してください。 ほとんどのスパンはドイツ語 (言語コード `de`) ですが、最後のスパンは英語 (言語コード `en`) です。
+1. **[結果]** タブで JSON コードの一番下までスクロールします。読み取りモデルによって各スパンの言語が検出されていることに注意してください。 ほとんどのスパンはドイツ語 (言語コード `de`) ですが、スパン内で他の言語コードが見つかります (たとえば、英語 - 言語コード `en` が最後のスパンの 1 つにあります)。
 
     ![Azure AI Document Intelligence Studio の読み取りモデルの結果で 2 つのスパンの言語の検出を示すスクリーンショット。](../media/language-detection.png#lightbox)
 
@@ -137,7 +138,6 @@ C# と Python の両方のアプリケーションと、Document Intelligence �
 
     ```csharp
     AnalyzeDocumentOperation operation = await client.AnalyzeDocumentFromUriAsync(WaitUntil.Completed, "prebuilt-invoice", fileUri);
-    await operation.WaitForCompletionAsync();
     ```
 
     **Python**
