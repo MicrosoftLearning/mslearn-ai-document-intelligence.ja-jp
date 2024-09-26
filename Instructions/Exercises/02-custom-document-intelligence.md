@@ -126,9 +126,10 @@ Azure AI Document Intelligence サービスを使用するには、Azure サブ�
         - *[続行]* を選択します。
     - *[プロジェクトの作成]* を選択します
 
-1. プロジェクトが作成されたら、**[トレーニング]** を選択してモデルをトレーニングします。 次の構成を使用します。
+1. プロジェクトが作成されたら、画面の右上にある **[トレーニング]** を選択してモデルをトレーニングします。 次の構成を使用します。
     - **モデル ID**: *グローバルに一意の名前を指定します (次の手順でモデル ID 名が必要になります*)。 
     - **テンプレートの構築**: テンプレート。
+1. **[モデルに移動]** を選択します。
 1. トレーニングには時間がかかる場合があります。 完了すると、通知が表示されます。
 
 ## カスタム Document Intelligence モデルをテストする
@@ -144,7 +145,7 @@ Azure AI Document Intelligence サービスを使用するには、Azure サブ�
     **Python**:
 
     ```powershell
-    pip install azure-ai-formrecognizer==3.3.0
+    pip install azure-ai-formrecognizer==3.3.3
     ```
 
 1. Visual Studio Code の **Labfiles/02-custom-document-intelligence** フォルダーで、使用している言語を選択します。 構成ファイル (言語設定に応じて **appsettings.json** または **.env**) を次の値で編集します。
