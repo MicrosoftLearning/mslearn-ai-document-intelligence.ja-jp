@@ -14,7 +14,7 @@ Azure AI Document Intelligence サービスを呼び出すには、そのサー�
 
 1. ブラウザー タブで Azure portal ([https://portal.azure.com](https://portal.azure.com?azure-portal=true)) を開き、自分の Azure サブスクリプションに関連付けられている Microsoft アカウントを使用してサインインします。
 1. Azure portal のホーム ページで、上部の検索ボックスに「**Document Intelligence**」と入力し、**Enter** キーを押します。
-1. **[Document Intelligence]** ページで、**[作成]** を選択します。
+1. **[Document Intelligence]** ページで、**[Document Intelligence の作成]** を選択します。
 1. **[Document Intelligence の作成]** ページで、次のコマンドを使用してリソースを構成します。
     - **サブスクリプション**: Azure サブスクリプション。
     - **リソース グループ**: *DocIntelligenceResources* などの 一意の名前を持つリソース グループを選択または作成します。
@@ -81,7 +81,7 @@ C# と Python の両方のアプリケーションと、Document Intelligence �
     **Python**:
 
     ```powershell
-    pip install azure-ai-formrecognizer==3.3.0
+    pip install azure-ai-formrecognizer==3.3.3
     ```
 
 ## Azure Document Intelligence サービスを使用するコードを追加する
