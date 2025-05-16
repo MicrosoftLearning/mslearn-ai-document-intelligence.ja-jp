@@ -6,202 +6,195 @@ lab:
 
 # Azure AI コンテンツ解釈を使用してコンテンツを分析する
 
-この演習では、Azure AI Foundry ポータルを使用して、旅行保険契約フォームから情報を抽出できるコンテンツ解釈プロジェクトを作成します。 そして、Azure AI Foundry ポータルでコンテンツ アナライザーをテストし、コンテンツ解釈 REST インターフェイスを使用して実行します。
+この演習では、Azure AI Foundry ポータルを使用して、請求書から情報を抽出できるコンテンツ解釈プロジェクトを作成します。 そして、Azure AI Foundry ポータルでコンテンツ アナライザーをテストし、コンテンツ解釈 REST インターフェイスを使用して実行します。
 
 この演習は約 **30** 分かかります。
 
-## コンテンツ解釈プロジェクトを作成する
+## Azure AI Foundry プロジェクトを作成する
 
-まず、Azure AI Foundry ポータルを使用してコンテンツ解釈プロジェクトを作成しましょう。
+まず、Azure AI Foundry プロジェクトを作成します。
 
-1. Web ブラウザーで [Azure AI Foundry ポータル](https://ai.azure.com) (`https://ai.azure.com`) を開き、Azure 資格情報を使用してサインインします。
-
-    Azure AI Foundry ポータルのホーム ページは次の画像のようになります。
+1. Web ブラウザーで [Azure AI Foundry ポータル](https://ai.azure.com) (`https://ai.azure.com`) を開き、Azure 資格情報を使用してサインインします。 初めてサインインするときに開いたヒントまたはクイック スタート ウィンドウを閉じます。また、必要に応じて左上にある **Azure AI Foundry** ロゴを使用してホーム ページに移動します。それは次の画像のようになります。
 
     ![Azure AI Foundry ポータルのスクリーンショット。](../media/ai-foundry-portal.png)
 
-1. ホーム ページの **[Find it fast]** セクションで、下の方にある **[コンテンツ解釈]** を選択します。
-1. **[コンテンツ解釈]** ページで、**[新しいコンテンツ解釈プロジェクトの作成]** ボタンを選択します。
-1. **[プロジェクトの概要]** ステップで、プロジェクトについての次のプロパティを設定し、**[次へ]** を選択します。
-    - **プロジェクト名**: `travel-insurance`
-    - **説明**: `Insurance policy data extraction`
-    - **ハブ**: 新しいハブを作成する
-1. **[ハブの作成]** ステップで、次のプロパティを設定し、**[次へ]** を選択します。
-    - **Azure AI ハブ リソース**: `content-understanding-hub`
-    - **Azure サブスクリプション**: "使用する Azure サブスクリプションを選択します"**
-    - **リソース グループ**: *適切な名前で新しいリソース グループを作成します*
-    - **[場所]**: 任意の使用可能な場所を選択します**
-    - **Azure AI サービス**: *適切な名前で新しい Azure AI サービス リソースを作成します*
-1. **[ストレージの設定]** ステップで、新しい AI Hub ストレージ アカウントを指定し、**[次へ]** を選択します。
-1. **[レビュー]** ページで、**[プロジェクトの作成]** を選択します。 そして、プロジェクトとその関連リソースが作成されるまで待ちます。
+1. ホーム ページで、**[+ 作成]** を選択します。
+1. **[プロジェクトの作成]** ウィザードで、有効なプロジェクト名を入力し、既存のハブが推奨された場合は、新しいハブを作成するオプションを選択します。 次に、ハブとプロジェクトをサポートするために自動的に作成される Azure リソースを確認します。
+1. **[カスタマイズ]** を選択し、ハブに次の設定を指定します。
+    - **ハブ名**: *ハブの有効な名前*
+    - **[サブスクリプション]**:"*ご自身の Azure サブスクリプション*"
+    - **リソース グループ**: *リソース グループを作成または選択します*
+    - **場所**: 次のいずれかのリージョンを選択します\*
+        - 米国西部
+        - スウェーデン中部
+        - オーストラリア東部
+    - **Azure AI サービスまたは Azure OpenAI への接続**: *新しい AI サービス リソースを作成します*
+    - **Azure AI 検索の接続**: *一意の名前で新しい Azure AI 検索リソースを作成する*
 
-    プロジェクトの準備ができたら、それを **[スキーマの定義]** ページで開きます。
+    > \*執筆時点では、Azure AI コンテンツ解釈はこれらのリージョンでのみ使用できます。
 
-    ![新しいコンテンツ解釈プロジェクトのスクリーンショット。](../media/content-understanding-project.png)
+1. **[次へ]** を選択し、構成を確認します。 **[作成]** を選択し、プロセスが完了するまで待ちます。
+1. プロジェクトが作成されたら、表示されているヒントをすべて閉じて、Azure AI Foundry ポータルのプロジェクト ページを確認します。これは次の画像のようになっているはずです。
 
-## Azure リソースのレビュー
+    ![Azure AI Foundry ポータルの Azure AI プロジェクトの詳細のスクリーンショット。](../media/ai-foundry-project.png)
 
-AI Hub とプロジェクトを作成したときに、プロジェクトをサポートするさまざまなリソースが Azure サブスクリプションに作成されました。
+## コンテンツ解釈アナライザーを作成する
 
-1. 新しいブラウザー タブで [Azure portal](https://portal.azure.com) (`https://portal.azure.com`) を開き、Azure 資格情報を使用してサインインします。
-1. ハブ用に作成したリソース グループに移動し、作成された Azure リソースを確認します。
+請求書から情報を抽出できるアナライザーを構築します。 まず、サンプル請求書に基づいてスキーマを定義します。
 
-    ![Azure リソースのスクリーンショット。](../media/azure-resources.png)
+1. 新しいブラウザー タブで、`https://github.com/microsoftlearning/mslearn-ai-document-intelligence/raw/main/Labfiles/05-content-understanding/forms/invoice-1234.pdf` からサンプル フォーム [invoice-1234.pdf](https://github.com/microsoftlearning/mslearn-ai-document-intelligence/raw/main/Labfiles/05-content-understanding/forms/invoice-1234.pdf) をダウンロードして、ローカル フォルダーに保存します。
+1. Azure AI Foundry プロジェクトのホーム ページを含んだタブに戻り、左側のナビゲーション ウィンドウで **[コンテンツの解釈]** を選択します。
+1. **[コンテンツの解釈]** ページで、上部の **[カスタム アナライザー]** タブを選択します。
+1. [コンテンツの解釈] カスタム アナライザー ページで、**[+ 作成]** を選択し、次の設定でタスクを作成します。
+    - **タスク名**: 請求書分析
+    - **説明**: 請求書からデータを抽出する
+    - **Azure AI サービス接続**: *お使いの Azure AI Foundry ハブの Azure AI サービス リソース*
+    - **Azure Blob Storage アカウント**: *お使いの Azure AI Foundry ハブの既定のストレージ アカウント*
+1. タスクが作成されるまで待ちます。
 
-## カスタム スキーマを定義する
+    > **ヒント**: ストレージへのアクセスでエラーが発生した場合は、少し待ってから、もう一度お試しください。
 
-旅行保険フォームから情報を抽出できるアナライザーを構築しようとしています。 まず、サンプル フォームに基づいてスキーマを定義します。
+1. **[スキーマの定義]** ページで、ダウンロードした **invoice-1234.pdf** ファイルをアップロードします。
+1. **請求書分析**テンプレートを選んで、**[作成]** を選択します。
 
-1. `https://github.com/microsoftlearning/mslearn-ai-document-intelligence/raw/main/Labfiles/05-content-understanding/forms/train-form.pdf` から [train-form.pdf](https://github.com/microsoftlearning/mslearn-ai-document-intelligence/raw/main/Labfiles/05-content-understanding/forms/train-form.pdf) サンプル フォームをダウンロードし、ローカル フォルダーに保存します。
-1. コンテンツ解釈プロジェクトが含まれているブラウザー タブに戻り、**[スキーマの定義]** ページで、先ほどダウンロードした **train-form.pdf** ファイルをアップロードします。
-1. **[ドキュメント分析]** テンプレートを選択し、**[作成]** を選択します。
+    *請求書分析*テンプレートには、請求書に一般的に見られるフィールドが含まれています。 スキーマ エディターを使用すると、不要な推奨フィールドを削除したり、必要なカスタム フィールドを追加したりできます。
 
-    スキーマ エディターでは、フォームから抽出するデータ フィールドを定義でき、このフィールドは右側に表示されます。 このフォームは次のようになります。
-
-    ![サンプル保険フォームのスクリーンショット。](../media/train-form.png)
-
-    フォームのデータ フィールドは次で構成されます。
-    
-    - 保険契約者に関する個人情報のコレクション。
-    - 保険が必要な旅行に関連する詳細のコレクション。
-    - 署名と日付
-
-    まず、個人の詳細を表すフィールドをテーブルとして追加します。このフィールドで個々の詳細のサブフィールドを定義します。
-
-1. **[+ 新しいフィールドの追加]** を選択して、次の値が入った新しいフィールドを作成します。
-    - **フィールド名**: `PersonalDetails`
-    - **フィールドの説明**: `Policyholder information`
-    - **値の型**: テーブル
-1. **[変更の保存]** (&#10004;) を選択し、新しいサブフィールドが自動的に作成されたことを確認します。
-1. 次の値を使用して新しいサブフィールドを構成します。
-    - **フィールド名**: `PolicyholderName`
-    - **フィールドの説明**: `Policyholder name`
-    - **値の型**: 文字列
-    - **方法**: 抽出
-1. **[+ 新しいサブフィールドの追加]** ボタンを使用して、次のサブフィールドを追加します。
-
-    | フィールド名 | フィールド説明 | 値の型 | メソッド |
-    |--|--|--|--|
-    | `StreetAddress` | `Policyholder address` | String | Extract |
-    | `City` | `Policyholder city` | String | Extract |
-    | `PostalCode` | `Policyholder post code` | String | Extract |
-    | `CountryRegion` | `Policyholder country or region` | String | Extract |
-    | `DateOfBirth` | `Policyholder birth date` | 日付 | Extract |
-
-1. すべての個人詳細サブフィールドを追加したら、**[戻る]** ボタンを使用してスキーマの最上位レベルに戻ります。
-1. 保険対象の旅行の詳細を表す、**`TripDetails`** という名前の新しい*テーブル*フィールドを追加します。 そして、そこに次のサブフィールドを追加します。
+1. 推奨フィールドの一覧で、**BillingAddress** を選びます。 このフィールドは、アップロードした請求書形式には必要ないので、表示される **[フィールドの削除]** (**&#128465;** アイコン) を使用して削除します。
+1. 次に、次の推奨フィールドを削除します。これも不要です。
+    - BillingAddressRecipient
+    - CustomerAddressRecipient
+    - CustomerId
+    - CustomerTaxId
+    - DueDate
+    - InvoiceTotal
+    - PaymentTerm
+    - PreviousUnpaidBalance
+    - PurchaseOrder
+    - RemittanceAddress
+    - RemittanceAddressRecipient
+    - ServiceAddress
+    - ServiceAddressRecipient
+    - ShippingAddress
+    - ShippingAddressRecipient
+    - TotalDiscount
+    - VendorAddressRecipient
+    - VendorTaxId
+    - TaxDetails
+1. **[+ 新しいフィールドの追加]** ボタンを使用して、次のフィールドを追加します。
 
     | フィールド名 | フィールド説明 | 値の型 | メソッド |
     |--|--|--|--|
-    | `DestinationCity` | `Trip city` | String | Extract |
-    | `DestinationCountry` | `Trip country or region` | String | Extract |
-    | `DepartureDate` | `Date of departure` | 日付 | Extract |
-    | `ReturnDate` | `Date of return` | 日付 | Extract |
+    | `VendorPhone` | `Vendor telephone number` | String | Extract |
+    | `ShippingFee` | `Fee for shipping` | 番号 | Extract |
 
-1. スキーマの最上位レベルに戻り、次の 2 つの個人フィールドを追加します。
+1. 完成したスキーマが次のようになっていることを確認し、**[保存]** を選択します。
+    ![請求書のスキーマのスクリーンショット。](../media/invoice-schema.png)
 
-    | フィールド名 | フィールド説明 | 値の型 | メソッド |
-    |--|--|--|--|
-    | `Signature` | `Policyholder signature` | String | Extract |
-    | `Date` | `Date of signature` | 日付 | Extract |
+1. **[アナライザーのテスト]** ページで、分析が自動的に開始されない場合は、**[分析の実行]** を選択します。 そして、分析が完了するのを待ち、スキーマ内のフィールドと一致すると特定された、請求書のテキスト値を確認します。
+1. 分析結果を確認します。これは次のようになっているはずです。
 
-1. 完成したスキーマが次のようになっていることを確認し、保存します。
+    ![アナライザーのテスト結果のスクリーンショット。](../media/analysis-results.png)
 
-    ![ドキュメント スキーマのスクリーンショット。](../media/completed-schema.png)
-
-1. **[アナライザーのテスト]** ページで、分析が自動的に開始されない場合は、**[分析の実行]** を選択します。 そして、分析が完了するのを待ち、スキーマ内のフィールドと一致すると特定されたフォームのテキスト値を確認します。
-
-    ![アナライザーのテスト結果のスクリーンショット。](../media/test-analyzer.png)
-
-    コンテンツ解釈サービスは、スキーマ内のフィールドに対応するテキストを正しく識別している必要があります。 そうなっていない場合は、**[ラベル データ]** ページを使用して別のサンプル フォームをアップロードし、各フィールドの正しいテキストを明示的に識別することができます。
+1. 識別されたフィールドの詳細を **[フィールド]** ウィンドウで確認し、**[結果]** タブで JSON 表現を確認します。
 
 ## アナライザーをビルドしてテストする
 
-保険フォームからフィールドを抽出するモデルをトレーニングしたので、同様のフォームで使用するアナライザーをビルドできます。
+これで、請求書からフィールドを抽出するモデルのトレーニングが完了したので、類似したフォームで使用するアナライザーを構築できます。
 
-1. 左側ナビゲーション ウィンドウで、**[アナライザーのビルド]** ページを選択します。
-1. **[+ アナライザーのビルド]** を選択し、次のプロパティ (次に示すとおりに正確に入力) を使用して新しいアナライザーをビルドします。
-    - **名前**: `travel-insurance-analyzer`
-    - **説明**: `Insurance form analyzer`
+1. **[アナライザーのビルド]** ページを選択したあと、**[+ アナライザーのビルド]** を選択し、次のプロパティ (次に示すとおりに正確に入力) を使用して新しいアナライザーをビルドします。
+    - **名前**: `contoso-invoice-analyzer`
+    - **説明**: `Contoso invoice analyzer`
 1. 新しいアナライザーの準備が整うのを待ちます (**[最新の情報に更新]** ボタンで確認できます)。
-1. `https://github.com/microsoftlearning/mslearn-ai-document-intelligence/raw/main/Labfiles/05-content-understanding/forms/test-form.pdf` から [test-form.pdf](https://github.com/microsoftlearning/mslearn-ai-document-intelligence/raw/main/Labfiles/05-content-understanding/forms/test-form.pdf) をダウンロードし、ローカル フォルダーに保存します。
-1. **[アナライザーのビルド]** ページに戻り、**travel-insurance-analyzer** リンクを選択します。 アナライザーのスキーマで定義されているフィールドが表示されます。
-1. **[travel-insurance-analyzer]** ページで、**[テスト]** を選択します。
-1. **[+ テスト ファイルのアップロード]** ボタンを使用して **test-form.pdf** をアップロードし、分析を実行してテスト フォームからフィールド データを抽出します。
-
-    ![テスト フォーム分析結果のスクリーンショット。](../media/test-form-results.png)
-
-1. **[結果]** タブを表示して、アナライザーによって返された JSON 形式の結果を表示します。 次のタスクでは、コンテンツ解釈 REST API を使用してフォームをアナライザーに送信し、結果をこの形式で返します。
-1. **[travel-insurance-analyzer]** ページを閉じます。
+1. `https://github.com/microsoftlearning/mslearn-ai-document-intelligence/raw/main/Labfiles/05-content-understanding/forms/invoice-1235.pdf` から [invoice-1235.pdf](https://github.com/microsoftlearning/mslearn-ai-document-intelligence/raw/main/Labfiles/05-content-understanding/forms/invoice-1235.pdf) をダウンロードして、ローカル フォルダーに保存します。
+1. **[アナライザーのビルド]** ページに戻り、**contoso-invoice-analyzer** リンクを選択します。 アナライザーのスキーマで定義されているフィールドが表示されます。
+1. **[contoso-invoice-analyzer]** ページで、**[テスト]** タブを選択します。
+1. **[+ テスト ファイルのアップロード]** ボタンを使用して **invoice-1235.pdf** をアップロードし、分析を実行してテスト フォームからフィールド データを抽出します。
+1. テストの結果を確認し、アナライザーがテスト請求書から正しいフィールドを抽出したことを確かめます。
+1. **[contoso-invoice-analyzer]*** ページを閉じます。
 
 ## コンテンツ解釈 REST API を使用する
 
 アナライザーを作成したので、コンテンツ解釈 REST API を使用してクライアント アプリケーションからアナライザーを実行できます。
 
-1. Azure portal を含むブラウザー タブに切り替えます (または、閉じた場合は新しいタブで `https://portal.azure.com` を開きます)。
-1. コンテンツ解釈ハブのリソース グループで、**"Azure AI サービス"** リソースを開きます。
-1. **[概要]** ページの **[キーとエンドポイント]** セクションで、**[コンテンツ解釈]** タブを表示します。
+1. **[プロジェクトの詳細]** エリアで、**[プロジェクト接続文字列]** の内容を書き留めます。 この接続文字列を使用して、クライアント アプリケーションでプロジェクトに接続します。
+1. 新しいブラウザー タブを開きます (既存のタブで Azure AI Foundry ポータルを開いたままにします)。 新しいブラウザー タブで [Azure portal](https://portal.azure.com) (`https://portal.azure.com`) を開き、メッセージに応じて Azure 資格情報を使用してサインインします。
 
-    ![コンテンツ解釈のキーとエンドポイントのスクリーンショット。](../media/keys-and-endpoint.png)
+    ウェルカム通知を閉じて、Azure portal のホーム ページを表示します。
 
-    クライアント アプリケーションからアナライザーに接続するには、コンテンツ解釈エンドポイントといずれかのキーが必要です。
+1. ページ上部の検索バーの右側にある **[\>_]** ボタンを使用して、Azure portal に新しい Cloud Shell を作成し、サブスクリプションにストレージがない ***PowerShell*** 環境を選択します。
 
-1. ページ上部の検索バーの右側にある **[\>_]** ボタンを使用して、Azure portal に新しい Cloud Shell を作成します。***PowerShell*** 環境を選択します。 次に示すように、Azure portal の下部にあるペインに、Cloud Shell のコマンド ライン インターフェイスが表示されます。
-
-    ![Cloud Shell 画面を含む Azure portal のスクリーンショット。](../media/cloud-shell.png)
+    Azure portal の下部にあるペインに Cloud Shell のコマンド ライン インターフェイスが表示されます。 作業しやすくするために、このウィンドウのサイズを変更したり最大化したりすることができます。
 
     > **注**: *Bash* 環境を使用するクラウド シェルを以前に作成した場合は、それを ***PowerShell*** に切り替えます。
 
-1. ペインの上部にある区分線をドラッグして Cloud Shell のサイズを変更したり、ペインの右上にある **&#8212;** 、 **&#10530;** 、**X** アイコンを使用して、ペインを最小化または最大化したり、閉じたりすることができます。 Azure Cloud Shell の使い方について詳しくは、[Azure Cloud Shell のドキュメント](https://docs.microsoft.com/azure/cloud-shell/overview)をご覧ください。
 1. Cloud Shell ツール バーの **[設定]** メニューで、**[クラシック バージョンに移動]** を選択します (これはコード エディターを使用するのに必要です)。
 
-1. PowerShell ペインで、次のコマンドを入力して、この演習用の GitHub リポジトリを複製します。
+    **<font color="red">続行する前に、クラシック バージョンの Cloud Shell に切り替えたことを確認します。</font>**
+
+1. Cloud Shell 画面で、次のコマンドを入力して、この演習のコード ファイルを含む GitHub リポジトリを複製します (コマンドを入力するか、クリップボードにコピーしてから、コマンド ラインで右クリックし、プレーンテキストとして貼り付けます)。
 
     ```
-    rm -r mslearn-ai-doc -f
-    git clone https://github.com/microsoftlearning/mslearn-ai-document-intelligence mslearn-ai-doc
+   rm -r mslearn-ai-foundry -f
+   git clone https://github.com/microsoftlearning/mslearn-ai-document-intelligence mslearn-ai-doc
     ```
 
-1. リポジトリが複製されたら、**mslearn-ai-doc/Labfiles/05-content-understanding/code** フォルダーに移動します。
+    > **ヒント**: Cloudshell にコマンドを入力すると、出力が大量のスクリーン バッファーを占有する可能性があります。 `cls` コマンドを入力して、各タスクに集中しやすくすることで、スクリーンをクリアできます。
+
+1. リポジトリが複製されたら、アプリのコード ファイルを含んだフォルダーに移動します。
 
     ```
-    cd mslearn-ai-doc/Labfiles/05-content-understanding/code
+   cd mslearn-ai-doc/Labfiles/05-content-understanding/code
+   ls -a -l
     ```
 
-1. 次のコマンドを入力して、提供されている **analyze_doc.py** Python コード ファイルを編集します。
+1. Cloud Shell コマンド ライン ペインで、次のコマンドを入力して、使用するライブラリをインストールします。
 
     ```
-    code analyze_doc.py
+   python -m venv labenv
+   ./labenv/bin/Activate.ps1
+   pip install dotenv azure-identity azure-ai-projects
+    ```
+
+1. 次のコマンドを入力して、提供されている構成ファイルを編集します。
+
+    ```
+   code .env
+    ```
+
+    このファイルをコード エディターで開きます。
+
+1. コード ファイルで、**YOUR_PROJECT_CONNECTION_STRING** プレースホルダーをプロジェクトの接続文字列 (Azure AI Foundry ポータルでプロジェクトの **[概要]** ページからコピーしたもの) に置き換え、**ANALYZER** が、アナライザーに割り当てた名前 (*contoso-invoice-analyzer*) に設定されていることを確認します
+1. プレースホルダーを置き換えたら、コード エディター内で **Ctrl + S** コマンドを使用して変更を保存してから、**Ctrl + Q** コマンドを使用して、Cloud Shell コマンド ラインを開いたままコード エディターを閉じます。
+
+1. Cloud Shell コマンド ラインで、次のコマンドを入力して、提供されている Python コード ファイル **analyze_invoice.py** を編集します。
+
+    ```
+    code analyze_invoice.py
     ```
     Python コード ファイルはコード エディターで開かれます。
 
-    ![Python コードを含むコード エディターのスクリーンショット。](../media/code-editor.png)
-
-1. コード ファイルで、**\<CONTENT_UNDERSTANDING_ENDPOINT\>** プレースホルダーを使用するコンテンツ解釈エンドポイントに置き換え、**\<CONTENT_UNDERSTANDING_KEY\>** プレースホルダーを Azure AI サービス リソースのキーのいずれかに置き換えます。
-
-    > **ヒント**: Azure portal の Azure AI サービス リソース ページからエンドポイントとキーをコピーするには、Cloud Shell ウィンドウのサイズを変更または最小化する必要があります。Cloud Shell を*閉じない*ように注意してください (閉じてしまうと、上記の手順を繰り返す必要があります)。
-
-1. プレースホルダーを置き換えたら、**Ctrl + S** コマンドを使用して変更を保存し、完成したコードを確認します。このコードの動作は次のとおりです。
-    - コンテンツ解釈エンドポイントに HTTP POST 要求を送信し、**travel-insurance-analyzer** にその URL に基づいてフォームを分析するように指示します。
+1. コードを確認します。以下の処理が行われます。
+    - 分析対象の請求書ファイルを特定します。既定では **invoice-1236.pdf** です。
+    - プロジェクトから Azure AI サービス リソースのエンドポイントとキーを取得します。
+    - コンテンツ解釈エンドポイントに HTTP POST 要求を送信し、画像を分析するように指示します。
     - POST 操作からの応答をチェックして、分析操作の ID を取得します。
     - 操作が実行されなくなるまで、HTTP GET 要求をコンテンツ解釈サービスに繰り返し送信します。
-    - 操作が成功した場合は、JSON 応答を表示します。
+    - 操作が成功した場合は、JSON 応答を解析し、取得した値を表示します。
 1. **Ctrl + Q** コマンドを使用して、Cloud Shell コマンド ラインを開いたままコード エディターを閉じます。
-1. Cloud Shell コマンド ライン ペインで、次のコマンドを入力して Python **requests** ライブラリ (コードで使用されます) をインストールします。
+1. Cloud Shell コマンド ライン ペインで、次のコマンドを入力して Python コードを実行します。
 
     ```
-    pip install requests
+    python analyze_invoice.py invoice-1236.pdf
     ```
 
-1. ライブラリがインストールされたら、Cloud Shell コマンド ライン ペインで、次のコマンドを入力して Python コードを実行します。
+1. プログラムからの出力を確認します。
+1. 次のコマンドを使用して、プログラムを別の請求書で実行します。
 
     ```
-    python analyze_doc.py
+    python analyze_invoice.py invoice-1235.pdf
     ```
 
-1. プログラムからの出力を確認します。これには、ドキュメント分析の JSON 結果が含まれます。
-
-    > **ヒント**: Cloud Shell コンソールのスクリーン バッファーは、出力全体を表示するのに十分な大きさではない場合があります。 出力全体を確認する場合は、コマンド `python analyze_doc.py > output.txt` を使用してプログラムを実行します。 そして、プログラムが完了したら、コマンド `code output.txt` を使用して、コード エディターで出力を開きます。
+    > **ヒント**: 使用できる 3 つの請求書ファイル (invoice-1234.pdf、invoice-1235.pdf、invoice-1236.pdf) がコード フォルダーにあります。 
 
 ## クリーンアップ
 
