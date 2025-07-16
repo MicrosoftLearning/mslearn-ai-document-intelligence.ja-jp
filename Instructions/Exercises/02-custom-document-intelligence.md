@@ -97,11 +97,7 @@ Azure AI Document Intelligence サービスを使用するには、Azure サブ�
 1. **Labfiles/02-custom-document-intelligence** フォルダーのターミナルで、次のコマンドを入力してスクリプトを実行します。
 
     ```PowerShell
-    $currentdir=(Get-Item .).FullName
-    cd ..
     ./setup.cmd
-    cd $currentdir
-
     ```
 
 1. スクリプトが完了したら、表示された出力を確認します。
